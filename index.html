@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>nixie clock</title>
+<style type="text/css">
+    html,body {
+        width: 100%;
+        height:100%;
+        margin: 0px;
+        background:#000000; 
+        top:0;left:0;
+        /*background: url(bg.png);
+        background-size: contain;*/
+        
+    }
+        .clock{
+            filter:alpha(opacity=70);opacity: 0.7;
+            position: absolute;top:0;left:0;bottom:0;right:0;width:920px;height:281.11px;margin:auto;
+            background: #000000;
+        }
+        .clock img{float:left;width:110px;margin-left: 2.5px;margin-right: 2.5px;}
+
+</style>
+<script type="text/javascript">
+    var flag = 0;
+    var sgvar = 0;
+    var mytime = 24;
+    var x = 1;
+    var alpha1 = 100;
+    var bgSize, imageElement = document.getElementsByTagName('body');
+    var imageElement1 = document.getElementsByTagName("div");
+    window.wallpaperPropertyListener = {
+    applyUserProperties: function(properties) {
+        if(properties.time1){
+            mytime = properties.time1.value;
+        }
+        if (properties.abool) {
+            if (properties.abool.value) {
+                imageElement[0].style.background = "#000000";
+                properties.bimage.value = "";
+            }
+        }          
+        if (properties.bimage) {
+            if (properties.bimage.value) {
+                imageElement[0].style.backgroundImage = 'url(' + 'file:///' + properties.bimage.value + ')';
+            }
+        }
+        if (properties.combo) {
+                    bgSize = properties.combo.value;
+                    imageElement[0].style.backgroundSize = bgSize;
+                }
+        if(properties.balpha){
+            alpha1 = properties.balpha.value;
+            imageElement1[0].style.filter = 'alpha(opacity=' + alpha1 + ')';
+            imageElement1[0].style.opacity = alpha1/100;
+        }
+        if(properties.Drag){
+            if(properties.Drag.value){
+                imageElement1[0].onDrag =true ;
+            }
+            else{
+                imageElement1[0].onDrag = false;
+                imageElement1[0].style.margin = 0;
+            }
+        }
+        if(properties.CPosition){
+            if(properties.CPosition.value){
+                imageElement1[0].onDrag =true ;
+                imageElement1[0].style.left = 0;
+                imageElement1[0].style.top = 0;
+                imageElement1[0].style.margin = "auto";
+            }
+            else {
+                imageElement1[0].style.margin = 0;
+                imageElement1[0].onDrag = false;
+            }
+        }
+    }
+    }
+    function imgdragstart(){return false;}  
+    window.onload = function()
+    {
+        for(i in document.images)document.images[i].ondragstart=imgdragstart;
+         __drag(_$("sg1"));
+        var clockimg1 = document.getElementById("sg1");
+        var s;
+        s = t();
+        clockimg1.onclick = function()
+        {
+            sgvar = (sgvar+1)%8;
+            if(flag === 1)
+            {
+                cleart(s);
+                window.setTimeout(function(){s = t()},3000);
+                ran();
+            } 
+          
+        }
+    }
+
+
+    function cleart(t)
+        {
+            clearInterval(t);
+            flag--;
+        }
+    function t()
+        {
+            var t = window.setInterval(tick,1000);
+            flag++;
+            return t;
+        }
+    var x=0;    
+    var obj1 = document.getElementsByTagName("img");
+    function toNum(num)   //以为当是个位数时，要显示01的状态
+        {
+        if (num<10)
+            {return '0'+num;}
+          else
+            {return ""+num;}
+
+        }
+    function tick()
+    {
+        var time= new Date();
+        var time1;
+        if(mytime == 12&&time.getHours()>12)
+        {
+        time1=toNum(time.getHours()-12)+toNum(time.getMinutes())+toNum(time.getSeconds());             
+        }
+        else 
+        {
+        time1=toNum(time.getHours())+toNum(time.getMinutes())+toNum(time.getSeconds());             
+        }
+        var y='1';
+        x++;
+        y=y+(x%2+1);
+       
+        //获取小时分钟秒的一个字符串
+             // console.log(time1);
+            //for (var i=0;i<obj.length;i++)     //一个有六张图片，前两张代表小时，中间两张代表分钟，后两张代表秒，
+        {
+            obj1[0].src=time1[0]+'.png'; 
+            obj1[1].src=time1[1]+'.png';    
+            obj1[2].src=y+'.png';     
+            obj1[3].src=time1[2]+'.png';
+            obj1[4].src=time1[3]+'.png';
+            obj1[5].src=y+'.png';          
+            obj1[6].src=time1[4]+'.png';
+            obj1[7].src=time1[5]+'.png';  //时间字符串是什么，就显示什么图片
+        }
+    }
+    function ran()
+    {
+        var sg = new Array(7);
+        for(var i = 0; i < 7; i++)
+        {
+            sg[i] = 0;
+        }
+        var j = 1;
+        var obj=document.getElementsByTagName("img");
+        function img1()
+        {
+            obj[0].src=sg[0]+'.png'; 
+            obj[1].src='11.png'; 
+            obj[2].src=sg[1]+'.png';  
+            obj[3].src=sg[2]+'.png';
+            obj[4].src=sg[3]+'.png'; 
+            obj[5].src=sg[4]+'.png';             
+            obj[6].src=sg[5]+'.png';
+            obj[7].src=sg[6]+'.png';        
+        }
+        function tick1()
+        {
+             for(var i = 0; i < 7; i++)
+             {
+                 sg[i] = j++%10;
+             }
+             //一个有六张图片，前两张代表小时，中间两张代表分钟，后两张代表秒，
+             img1();
+        }
+        function ran1()
+        {
+            if(Math.floor(Math.random()*8) == sgvar)
+            {
+                sg[0] = 1;
+                sg[1] = 0;
+                sg[2] = 4;
+                sg[3] = 8;
+                sg[4] = 5;
+                sg[5] = 9;
+                sg[6] = 6;
+            }
+            else
+            {
+                sg[0] = Math.floor(Math.random()*2);
+                for(var i = 1; i < 7; i++)
+                {
+                    sg[i] = Math.floor(Math.random()*10);
+                }
+            }
+            img1();
+        }
+        var time1 = window.setInterval(tick1, 50);
+        window.setTimeout(function(){clearInterval(time1)},2000);
+        window.setTimeout(ran1,2000);
+    }
+</script>
+</head>
+
+<body>
+       <div id = "sg1"  class = "clock">
+         <img src="10.png"  />
+         <img src="10.png" />
+         <img src="10.png"  />
+         <img src="10.png" />
+         <img src="10.png" />
+         <img src="10.png" />
+         <img src="10.png"/>
+         <img src="10.png" />
+       </div>
+    <script type="text/javascript" src="drag.js"> </script>
+</body>
+</html>
